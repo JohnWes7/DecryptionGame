@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    
+
     public float rotateSpeed = 2f;
     public float moveSpeed = 3f;
 
@@ -34,7 +34,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        FPSMode();
+        RotateCameraMod();
+        RayCast();
     }
 
     public void RotateCameraMod()
@@ -120,22 +121,42 @@ public class PlayerController : MonoBehaviour
         // apply sensitivity multiplier
         i *= lookSensitivity;
 
-//        if (isGamepad)
-//        {
-//            // since mouse input is already deltaTime-dependant, only scale input with frame time if it's coming from sticks
-//            i *= Time.deltaTime;
-//        }
-//        else
-//        {
-//            // reduce mouse input amount to be equivalent to stick movement
-//            i *= 0.01f;
-//#if UNITY_WEBGL
-//                // Mouse tends to be even more sensitive in WebGL due to mouse acceleration, so reduce it even more
-//                i *= webglLookSensitivityMultiplier;
-//#endif
-//        }
+        //        if (isGamepad)
+        //        {
+        //            // since mouse input is already deltaTime-dependant, only scale input with frame time if it's coming from sticks
+        //            i *= Time.deltaTime;
+        //        }
+        //        else
+        //        {
+        //            // reduce mouse input amount to be equivalent to stick movement
+        //            i *= 0.01f;
+        //#if UNITY_WEBGL
+        //                // Mouse tends to be even more sensitive in WebGL due to mouse acceleration, so reduce it even more
+        //                i *= webglLookSensitivityMultiplier;
+        //#endif
+        //        }
 
         return i;
+    }
+
+    public void RayCast()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            //获得鼠标点击射线
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit info;
+
+            if (Physics.Raycast(ray, out info, 50))
+            {
+                IBeUse beUse = info.transform.GetComponent<IBeUse>();
+
+                if (beUse != null)
+                {
+                    beUse.BeUse();
+                }
+            }
+        }
     }
 }
 

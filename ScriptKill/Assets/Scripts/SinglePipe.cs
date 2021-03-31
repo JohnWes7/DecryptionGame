@@ -21,9 +21,20 @@ public class SinglePipe : MonoBehaviour,IBeUse
 
         //（真正影响旋转的dir）改变dir
         Vector4 temp = dir;
-        dir.x = temp.y;
-        dir.y = temp.z;
-        dir.z = temp.w;
-        dir.w = temp.x;
+        dir.x = temp.w;
+        dir.y = temp.x;
+        dir.z = temp.y;
+        dir.w = temp.z;
+
+        transform.parent.GetComponent<PipeController>().ScaneCorrect();
+    }
+
+    public void BeChangeColor()
+    {
+        GetComponent<MeshRenderer>().material = green;
+    }
+    public void BeNormalColor()
+    {
+        GetComponent<MeshRenderer>().material = originMat;
     }
 }
