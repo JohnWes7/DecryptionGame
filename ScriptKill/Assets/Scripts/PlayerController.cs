@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
+    private static PlayerController instance;
+    public static PlayerController Instance { get => instance; set => instance = value; }
 
     public float rotateSpeed = 2f;
     public float moveSpeed = 3f;
@@ -26,20 +29,37 @@ public class PlayerController : MonoBehaviour
 
     public Vector3 characterVelocity;
 
+    [Tooltip("相机是否锁定住")]
+    public bool isLookAt = false;
+    public Vector3 startPos;
+    public Vector3 beforePos;
+    public Quaternion beforeQuater;
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
     void Start()
     {
-
+        startPos = transform.position;
     }
 
 
     void Update()
     {
-        FPSMode();
+        RotateCameraMod();
         RayCast();
     }
 
     public void RotateCameraMod()
     {
+        //如果是在注视状态下的话就直接结束函数
+        if (isLookAt)
+        {
+            return;
+        }
+
         if (Input.GetMouseButton(0))
         {
             // 水平旋转
@@ -60,6 +80,8 @@ public class PlayerController : MonoBehaviour
 
     public void FPSMode()
     {
+        
+
         if (Cursor.lockState != CursorLockMode.Locked)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -162,6 +184,31 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void LookAt(Vector3 pos, Quaternion quaternion)
+    {
+        //如果已经是注视状态就取消
+        if (isLookAt)
+        {
+            return;
+        }
+
+        //已经在注视
+        isLookAt = true;
+
+        //记录原本的注视前的位置和旋转值
+        beforePos = transform.position;
+        beforeQuater = transform.rotation;
+
+        transform.DOMove(pos, 0.3f);
+        transform.DORotateQuaternion(quaternion, 0.3f);
+    }
+
+    public void CancelLookAt()
+    {
+        transform.DOMove(beforePos, 0.3f);
+        transform.DORotateQuaternion(beforeQuater, 0.3f).OnComplete(() => { isLookAt = false; });
     }
 }
 

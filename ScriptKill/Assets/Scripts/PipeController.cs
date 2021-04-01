@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PipeController : MonoBehaviour
+public class PipeController : MonoBehaviour , IBeUse
 {
     [Tooltip("管道预制体")]
     public List<GameObject> prefabs;
@@ -17,6 +17,7 @@ public class PipeController : MonoBehaviour
         { 3, 1, 2 },
         { 1, 2, 1 }
     };
+
 
     public struct Pos
     {
@@ -35,14 +36,18 @@ public class PipeController : MonoBehaviour
     public Vector2 startPos = new Vector2(0, 0);
     public Vector2 endPos = new Vector2(2, 2);
 
+    [Tooltip("注视视角的时候相机位置")]
+    public Transform CameraPos;
+
     private void Start()
     {
+        
         InIt();
         
         ScaneCorrect();
     }
 
-    public void InIt()
+    public void CreatAndInIt()
     {
         singlePipes = new SinglePipe[3, 3];
 
@@ -80,6 +85,18 @@ public class PipeController : MonoBehaviour
             }
         }
 
+    }
+    public void InIt()
+    {
+        singlePipes = new SinglePipe[3, 3];
+
+        for (int x = 0; x < map.GetLength(0); x++)
+        {
+            for (int y = 0; y < map.GetLength(1); y++)
+            { 
+                singlePipes[x, y] = transform.Find(x.ToString() + y.ToString()).GetComponent<SinglePipe>();
+            }
+        }
     }
 
     public bool ScaneCorrect()
@@ -216,6 +233,11 @@ public class PipeController : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void BeUse()
+    {
+        PlayerController.Instance.LookAt(CameraPos.position, CameraPos.rotation);
     }
 }
 

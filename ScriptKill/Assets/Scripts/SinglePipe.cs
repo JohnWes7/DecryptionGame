@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class SinglePipe : MonoBehaviour,IBeUse
+[System.Serializable]
+public class SinglePipe : MonoBehaviour, IBeUse
 {
     [Tooltip("有没有被查找到")]
     public bool isFind = false;
