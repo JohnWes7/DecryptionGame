@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class SinglePipe : MonoBehaviour,IBeUse
 {
@@ -14,10 +15,15 @@ public class SinglePipe : MonoBehaviour,IBeUse
     [Tooltip("原本的材质")]
     public Material originMat;
 
+    [Tooltip("旋转时间")]
+    public float rotateTime = 0.2f;
+
     public void BeUse()
     {
         //改变旋转
-        transform.Rotate(0, 90, 0);
+        //transform.Rotate(0, 90, 0);
+        transform.DOKill(true);//如果之前的旋转还没到位直接kill true到位，保证连续点击不会出事
+        transform.DOLocalRotateQuaternion(transform.localRotation * Quaternion.Euler(0, 90, 0), rotateTime);
 
         //（真正影响旋转的dir）改变dir
         Vector4 temp = dir;

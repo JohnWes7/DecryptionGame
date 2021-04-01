@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        RotateCameraMod();
+        FPSMode();
         RayCast();
     }
 
@@ -60,6 +60,11 @@ public class PlayerController : MonoBehaviour
 
     public void FPSMode()
     {
+        if (Cursor.lockState != CursorLockMode.Locked)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
         // 水平旋转
         {
             transform.Rotate(new Vector3(0, -GetLookInputsHorizontal() * rotateSpeed, 0), Space.World);
