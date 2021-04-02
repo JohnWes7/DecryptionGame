@@ -6,3 +6,13 @@ public interface IBeUse
 {
     void BeUse();
 }
+
+public class UseItems : MonoBehaviour, IBeUse
+{
+    public LookType lookType;
+
+    public virtual void BeUse()
+    {
+
+    }
+}
