@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class GamePanelController : MonoBehaviour
 {
+    [Tooltip("退出注视状态的按钮")]
     public GameObject BackFromLookAtButton;
+    
+    
+
     public void ShowBackFromLookAtButton()
     {
         BackFromLookAtButton.SetActive(true);

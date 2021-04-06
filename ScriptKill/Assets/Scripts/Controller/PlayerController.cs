@@ -210,6 +210,11 @@ public class PlayerController : MonoBehaviour
 
     public void CancelLookAt()
     {
+        if (isLookAt == false)
+        {
+            return;
+        }
+
         transform.DOMove(beforePos, 0.3f);
         transform.DORotateQuaternion(beforeQuater, 0.3f).OnComplete(() => { isLookAt = false; this.lookType = LookType.None; });
     }

@@ -37,19 +37,29 @@ public class PipeController : UseItems
     public Vector2 startPos = new Vector2(0, 0);
     public Vector2 endPos = new Vector2(2, 2);
 
+    
     private bool state = false;
-    public bool State { get => state; }
+    public bool State { get => state; }//谜题是否被解开
+
+
 
     [Tooltip("注视视角的时候相机位置")]
     public Transform CameraPos;
 
-    public UnityEvent TrueCallBack;
+    [Tooltip("成功解锁回调")]
+    public UnityEvent OnPuzzleTrue;
+
 
     private void Start()
     {
-        
+        //初始化
         InIt();
-        
+
+        //加入谜题解完的回调
+        GamePanelController ui = GameObject.Find("Canvas/GamePanel").GetComponent<GamePanelController>();
+        OnPuzzleTrue.AddListener(ui.BackFormLookAtCallBack);
+
+        //开始的扫描
         ScaneCorrect();
     }
 
@@ -113,9 +123,9 @@ public class PipeController : UseItems
     }
 
     /// <summary>
-    /// 判断
+    /// 检测谜题是否完成
     /// </summary>
-    /// <returns></returns>
+    /// <returns>是否完成</returns>
     public bool ScaneCorrect()
     {
         for (int x = 0; x < singlePipes.GetLength(0); x++)
@@ -132,12 +142,18 @@ public class PipeController : UseItems
 
         if (resaule)
         {
-            TrueCallBack.Invoke();
+            OnPuzzleTrueCallBack();
         } 
 
         return resaule;
     }
 
+    /// <summary>
+    /// 路径查找递归
+    /// </summary>
+    /// <param name="x">x坐标</param>
+    /// <param name="y">y坐标</param>
+    /// <returns></returns>
     public bool ReFind(int x, int y)
     {
         //找到的节点标记为已被找到
@@ -243,6 +259,12 @@ public class PipeController : UseItems
         return false;
     }
 
+    /// <summary>
+    /// 判断该坐标是否可获得
+    /// </summary>
+    /// <param name="targetX">坐标x</param>
+    /// <param name="targetY">坐标y</param>
+    /// <returns></returns>
     public bool IsAvailable(int targetX, int targetY)
     {
         
@@ -257,10 +279,33 @@ public class PipeController : UseItems
         return false;
     }
 
+    /// <summary>
+    /// 被使用
+    /// </summary>
     public override void BeUse()
     {
+        //如果被解开了就不能再被use
+        if (state)
+        {
+            return;
+        }
+
+        //注视动作
         PlayerController.Instance.LookAt(CameraPos.position, CameraPos.rotation, LookType.PipePuzzel);
-        GameObject.Find("Canvas/GamePanel").GetComponent<GamePanelController>().ShowBackFromLookAtButton();
+        //显示退出注视按钮
+        GamePanelController ui = GameObject.Find("Canvas/GamePanel").GetComponent<GamePanelController>();
+
+        ui.ShowBackFromLookAtButton();
+    }
+
+    /// <summary>
+    /// 谜题解完后执行一遍该方法
+    /// </summary>
+    public void OnPuzzleTrueCallBack()
+    {
+        state = true;
+
+        OnPuzzleTrue.Invoke();
     }
 }
 

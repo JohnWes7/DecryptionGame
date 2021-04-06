@@ -51,12 +51,12 @@ public class DrawerController : UseItems
 
     }
 
-    public void Unlocked()
+    public void Unlock()
     {
         this.isLocked = false;
     }
 
-    public void Locked()
+    public void Lock()
     {
         this.isLocked = true;
     }
