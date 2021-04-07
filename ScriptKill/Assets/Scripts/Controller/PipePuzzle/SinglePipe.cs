@@ -21,7 +21,7 @@ public class SinglePipe : UseItems
 
     private void Awake()
     {
-        base.lookType = LookType.PipePuzzel;
+        base.lookType = LookType.PipePuzzle;
     }
 
     public override void BeUse()

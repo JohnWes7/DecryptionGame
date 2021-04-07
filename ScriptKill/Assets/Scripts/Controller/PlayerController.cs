@@ -169,11 +169,12 @@ public class PlayerController : MonoBehaviour
 
     public void RayCast()
     {
+        //获得鼠标点击射线
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit info;
+
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            //获得鼠标点击射线
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit info;
 
             if (Physics.Raycast(ray, out info, 50))
             {
@@ -182,6 +183,19 @@ public class PlayerController : MonoBehaviour
                 if (beUse != null && beUse.lookType == lookType)
                 {
                     beUse.BeUse();
+                }
+            }
+        }
+
+        if (Input.GetKey(KeyCode.Mouse0))
+        {
+            if (Physics.Raycast(ray, out info, 50))
+            {
+                IBeDrag beDrag = info.transform.GetComponent<IBeDrag>();
+
+                if (beDrag != null)
+                {
+                    beDrag.BeDrag(info.point, lookType);
                 }
             }
         }

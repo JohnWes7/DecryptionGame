@@ -291,7 +291,7 @@ public class PipeController : UseItems
         }
 
         //注视动作
-        PlayerController.Instance.LookAt(CameraPos.position, CameraPos.rotation, LookType.PipePuzzel);
+        PlayerController.Instance.LookAt(CameraPos.position, CameraPos.rotation, LookType.PipePuzzle);
         //显示退出注视按钮
         GamePanelController ui = GameObject.Find("Canvas/GamePanel").GetComponent<GamePanelController>();
 
