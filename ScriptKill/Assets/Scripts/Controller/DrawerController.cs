@@ -21,7 +21,7 @@ public class DrawerController : UseItems
     [Tooltip("抽屉开关状态")]
     public bool isOpen = false;
 
-    public override void BeUse()
+    public override void BeUse(RaycastHit hitInfo)
     {
         //被上锁了的话直接进行被上锁回调
         if (isLocked)

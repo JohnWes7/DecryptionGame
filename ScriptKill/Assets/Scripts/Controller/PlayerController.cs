@@ -32,9 +32,12 @@ public class PlayerController : MonoBehaviour
     [Tooltip("相机是否锁定住")]
     public bool isLookAt = false;
     public LookType lookType = LookType.None;
+
     public Vector3 startPos;
     public Vector3 beforePos;
     public Quaternion beforeQuater;
+
+    private GameObject downObject;
 
     private void Awake()
     {
@@ -56,7 +59,7 @@ public class PlayerController : MonoBehaviour
     public void RotateCameraMod()
     {
         //如果是在注视状态下的话就直接结束函数
-        if (isLookAt)
+        if (lookType != LookType.None)
         {
             return;
         }
@@ -178,11 +181,12 @@ public class PlayerController : MonoBehaviour
 
             if (Physics.Raycast(ray, out info, 50))
             {
+                downObject = info.transform.gameObject;
                 UseItems beUse = info.transform.GetComponent<UseItems>();
 
                 if (beUse != null && beUse.lookType == lookType)
                 {
-                    beUse.BeUse();
+                    beUse.BeUse(info);
                 }
             }
         }
@@ -191,12 +195,25 @@ public class PlayerController : MonoBehaviour
         {
             if (Physics.Raycast(ray, out info, 50))
             {
-                IBeDrag beDrag = info.transform.GetComponent<IBeDrag>();
-
-                if (beDrag != null)
+                //保证是同一物体不调用到其他物体上的方法
+                if (info.transform.gameObject == downObject)
                 {
-                    beDrag.BeDrag(info.point, lookType);
-                }
+                    IBeDrag beDrag = info.transform.GetComponent<IBeDrag>();
+
+                    if (beDrag != null)
+                    {
+                        beDrag.BeDrag(info.point, lookType);
+                    }
+                } 
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            IMouseUp mouseUp = downObject.GetComponent<IMouseUp>();
+            if (mouseUp != null)
+            {
+                mouseUp.MouseUp();
             }
         }
     }
@@ -221,6 +238,7 @@ public class PlayerController : MonoBehaviour
         transform.DOMove(pos, 0.3f);
         transform.DORotateQuaternion(quaternion, 0.3f);
     }
+
 
     public void CancelLookAt()
     {

@@ -282,7 +282,7 @@ public class PipeController : UseItems
     /// <summary>
     /// 被使用
     /// </summary>
-    public override void BeUse()
+    public override void BeUse(RaycastHit hitInfo)
     {
         //如果被解开了就不能再被use
         if (state)

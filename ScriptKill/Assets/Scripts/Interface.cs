@@ -7,7 +7,7 @@ using UnityEngine;
 
 public interface IBeUse
 {
-    void BeUse();
+    void BeUse(RaycastHit hitInfo);
 }
 
 public interface IBeDrag
@@ -15,11 +15,16 @@ public interface IBeDrag
     void BeDrag(Vector3 point, LookType playerLookType);
 }
 
+public interface IMouseUp
+{
+    void MouseUp();
+}
+
 public class UseItems : MonoBehaviour, IBeUse
 {
     public LookType lookType;
 
-    public virtual void BeUse()
+    public virtual void BeUse(RaycastHit hitInfo)
     {
 
     }

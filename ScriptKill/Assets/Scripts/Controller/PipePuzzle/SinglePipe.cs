@@ -24,7 +24,7 @@ public class SinglePipe : UseItems
         base.lookType = LookType.PipePuzzle;
     }
 
-    public override void BeUse()
+    public override void BeUse(RaycastHit hitInfo)
     {
         //改变旋转
         //transform.Rotate(0, 90, 0);

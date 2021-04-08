@@ -27,34 +27,56 @@ public class HuarongPuzzleController : UseItems
 
             HuarongBarController bar = child.GetComponent<HuarongBarController>();
 
-            switch (bar.barType)
+            if (bar)
             {
-                case HuarongBarType.Vertical2:
-                    
-                    break;
-                case HuarongBarType.vertical3:
-                    break;
-                case HuarongBarType.Horizonal2:
-                    break;
-                default:
-                    break;
+                switch (bar.barType)
+                {
+                    case HuarongBarType.Vertical2:
+
+                        break;
+                    case HuarongBarType.vertical3:
+                        break;
+                    case HuarongBarType.Horizonal2:
+                        break;
+                    default:
+                        break;
+                }
             }
+
+            
         }
     }
 
-    public override void BeUse()
+    public override void BeUse(RaycastHit hitInfo)
     {
         //如果被解开了就不能再被use
         if (state)
         {
             return;
         }
+        
 
         //注视动作
         PlayerController.Instance.LookAt(CameraPos.position, CameraPos.rotation, LookType.HuarongPuzzle);
-        //显示退出注视按钮
-        GamePanelController ui = GameObject.Find("Canvas/GamePanel").GetComponent<GamePanelController>();
 
+        //找到ui
+        GamePanelController ui = GameObject.Find("Canvas/GamePanel").GetComponent<GamePanelController>();
+        //调用方法显示回退按钮
         ui.ShowBackFromLookAtButton();
+        //添加事件
+        ui.onBackFormLookAt.AddListener(ReactiveBoxCollider);
+
+        //关闭collider
+        transform.GetComponent<BoxCollider>().enabled = false;
+    }
+
+    public void ReactiveBoxCollider()
+    {
+        Debug.Log("重新开启碰撞器");
+        GetComponent<BoxCollider>().enabled = true;
+
+        //移除自身委托事件
+        GamePanelController ui = GameObject.Find("Canvas/GamePanel").GetComponent<GamePanelController>();
+        ui.onBackFormLookAt.RemoveListener(ReactiveBoxCollider);
     }
 }

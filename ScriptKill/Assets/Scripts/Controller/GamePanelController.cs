@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GamePanelController : MonoBehaviour
 {
     [Tooltip("退出注视状态的按钮")]
     public GameObject BackFromLookAtButton;
+
+    public UnityEvent onBackFormLookAt;
     
     
 
@@ -26,5 +29,8 @@ public class GamePanelController : MonoBehaviour
     {
         PlayerController.Instance.CancelLookAt();
         HideBackFromLookAtButton();
+
+        //执行委托事件
+        onBackFormLookAt.Invoke();
     }
 }
