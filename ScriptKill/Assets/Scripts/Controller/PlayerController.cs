@@ -176,6 +176,7 @@ public class PlayerController : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit info;
 
+        //OnMouseDown
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
 
@@ -191,12 +192,13 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        //OnMouseDrag
         if (Input.GetKey(KeyCode.Mouse0))
         {
             if (Physics.Raycast(ray, out info, 50))
             {
                 //保证是同一物体不调用到其他物体上的方法
-                if (info.transform.gameObject == downObject)
+                if (downObject && info.transform.gameObject == downObject)
                 {
                     IBeDrag beDrag = info.transform.GetComponent<IBeDrag>();
 
@@ -208,6 +210,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        //模拟OnMouseUp
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
             IMouseUp mouseUp = downObject.GetComponent<IMouseUp>();
@@ -215,6 +218,8 @@ public class PlayerController : MonoBehaviour
             {
                 mouseUp.MouseUp();
             }
+
+            downObject = null;
         }
     }
 
