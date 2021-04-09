@@ -15,6 +15,7 @@ public class HuarongPuzzleController : UseItems
     private void Start()
     {
         base.lookType = LookType.None;
+        InIt();
     }
 
     /// <summary>
@@ -22,6 +23,7 @@ public class HuarongPuzzleController : UseItems
     /// </summary>
     public void InIt()
     {
+        //将所有的方块加入数组
         foreach (Transform child in transform)
         {
 
@@ -32,19 +34,32 @@ public class HuarongPuzzleController : UseItems
                 switch (bar.barType)
                 {
                     case HuarongBarType.Vertical2:
-
+                        map[bar.arrayPos.x, bar.arrayPos.y] = 1;
+                        map[bar.arrayPos.x, bar.arrayPos.y + 1] = 1;
                         break;
                     case HuarongBarType.vertical3:
+                        for (int i = -1; i < 2; i++)
+                        {
+                            map[bar.arrayPos.x, bar.arrayPos.y + i] = 1;
+                        }
                         break;
                     case HuarongBarType.Horizonal2:
+                        map[bar.arrayPos.x, bar.arrayPos.y] = 1;
+                        map[bar.arrayPos.x + 1, bar.arrayPos.y] = 1;
+                        break;
+                    case HuarongBarType.PlayerHorizonal2:
+                        map[bar.arrayPos.x, bar.arrayPos.y] = 2;
+                        map[bar.arrayPos.x + 1, bar.arrayPos.y] = 2;
                         break;
                     default:
                         break;
                 }
             }
 
-            
         }
+
+        //输出数组到控制台
+        DebugPrintMap();
     }
 
     public override void BeUse(RaycastHit hitInfo)
@@ -78,5 +93,43 @@ public class HuarongPuzzleController : UseItems
         //移除自身委托事件
         GamePanelController ui = GameObject.Find("Canvas/GamePanel").GetComponent<GamePanelController>();
         ui.onBackFormLookAt.RemoveListener(ReactiveBoxCollider);
+    }
+
+    public bool IsPosAvailable(Vector2Int pos)
+    {
+        if (pos.x < 0 || pos.y < 0 || pos.x > map.GetLength(0) || pos.y > map.GetLength(1))
+        {
+            return false;
+        }
+
+        if (map[pos.x, pos.y] != 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void DeleteArrayPos(Vector2Int pos)
+    {
+        map[pos.x, pos.y] = 0;
+    }
+
+
+    public void DebugPrintMap()
+    {
+        string de = "\n";
+
+        for (int y = map.GetLength(1) - 1; y >= 0; y--)
+        {
+            for (int x = 0; x < map.GetLength(0); x++)
+            {
+                de = de + map[x, y].ToString() + " ";
+            }
+
+            de += "\n";
+        }
+
+        Debug.Log(de);
     }
 }
