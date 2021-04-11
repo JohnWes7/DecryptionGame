@@ -213,13 +213,16 @@ public class PlayerController : MonoBehaviour
         //模拟OnMouseUp
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
-            IMouseUp mouseUp = downObject.GetComponent<IMouseUp>();
-            if (mouseUp != null)
+            if (downObject)
             {
-                mouseUp.MouseUp();
-            }
+                IMouseUp mouseUp = downObject.GetComponent<IMouseUp>();
+                if (mouseUp != null)
+                {
+                    mouseUp.MouseUp();
+                }
 
-            downObject = null;
+                downObject = null;
+            }
         }
     }
 

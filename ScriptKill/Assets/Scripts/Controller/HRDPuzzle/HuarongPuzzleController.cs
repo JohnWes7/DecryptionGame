@@ -95,9 +95,15 @@ public class HuarongPuzzleController : UseItems
         ui.onBackFormLookAt.RemoveListener(ReactiveBoxCollider);
     }
 
+    /// <summary>
+    /// 判断该点是否可用
+    /// </summary>
+    /// <param name="pos">指定位置</param>
+    /// <returns>是否可用</returns>
     public bool IsPosAvailable(Vector2Int pos)
     {
-        if (pos.x < 0 || pos.y < 0 || pos.x > map.GetLength(0) || pos.y > map.GetLength(1))
+
+        if (pos.x < 0 || pos.y < 0 || pos.x >= map.GetLength(0) || pos.y >= map.GetLength(1))
         {
             return false;
         }
@@ -110,12 +116,28 @@ public class HuarongPuzzleController : UseItems
         return true;
     }
 
+    /// <summary>
+    /// 将指定位置变为0 表示没有障碍
+    /// </summary>
+    /// <param name="pos">指定位置</param>
     public void DeleteArrayPos(Vector2Int pos)
     {
         map[pos.x, pos.y] = 0;
     }
+    
+    /// <summary>
+    /// 将指定位置变为type（int） 表示有物体
+    /// </summary>
+    /// <param name="pos">轴心点的位置</param>
+    /// <param name="type">需要填入的int数值</param>
+    public void AddArrayPos(Vector2Int pos, int type)
+    {
+        map[pos.x, pos.y] = type;
+    }
 
-
+    /// <summary>
+    /// 打印当前地图到控制台
+    /// </summary>
     public void DebugPrintMap()
     {
         string de = "\n";
